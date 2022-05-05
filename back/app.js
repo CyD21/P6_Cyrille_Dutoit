@@ -1,22 +1,27 @@
 const express = require("express");
+const helmet = require("helmet");
 const mongoose = require("mongoose");
-const path = require("path");
+const dotenv = require("dotenv");
+
 
 const userRoutes = require("./routes/user");
 const saucesRoutes = require("./models/sauces");
+const path = require("path");
 
 const app = express();
+dotenv.config();
 
+// !====CONNECTION BASE DE DONNEES=================
 mongoose
   .connect(
-    "mongodb+srv://CyrilleD21:b8VwUKn9qCaPomj1@cluster0.ylmlq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    process.env.MONGO_URL,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
+// !===============================================
 
-app.use(express.json());
-
+// !====CORS (Cross-Origin Ressoure Sharing)=======
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -29,9 +34,11 @@ app.use((req, res, next) => {
   );
   next();
 });
-
-app.use("/images", express.static(path.join(__dirname, "images")));
+// !=================================================
+app.use(express.json());
+app.use(helmet());
 app.use("/api/auth", userRoutes);
 app.use("/api/saucesRoutes", saucesRoutes);
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 module.exports = app;
