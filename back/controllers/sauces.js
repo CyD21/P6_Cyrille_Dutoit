@@ -77,7 +77,7 @@ exports.getAllSauces = (req, res, next) => {
  * *Gestion des likes sur les sauces
  ============================================================================================*/
 exports.likeSauce = (req, res, next) => {
-  const like = req.body.like; // =1, 0 -1
+  const like = req.body.like;
   const idOfUser = req.body.userId;
   const choosenSauce = req.params.id;
 
@@ -89,7 +89,7 @@ exports.likeSauce = (req, res, next) => {
   Sauce.findOne({_id: choosenSauce})
       .then(sauce => {
           // valeurs de la sauce à modifier = notation
-          const newNotes = {
+          const newLike = {
               usersLiked: sauce.usersLiked,
               usersDisliked: sauce.usersDisliked,
               likes: 0,
@@ -98,34 +98,34 @@ exports.likeSauce = (req, res, next) => {
           switch (like) {
               //en cas de pouce vers le bas like = -1 :
               case -1:
-                  newNotes.usersDisliked.push(idOfUser);
+                  newLike.usersDisliked.push(idOfUser);
                   break;
               //en cas de changement d'avis, double clic sur le même pouce, ou retrait d'un avis
               case 0:
                   // si on annule un like 
-                  if(newNotes.usersLiked.includes(idOfUser)){
-                      const index = newNotes.usersLiked.indexOf(idOfUser);
-                      newNotes.usersLiked.splice(index, 1);
+                  if(newLike.usersLiked.includes(idOfUser)){
+                      const index = newLike.usersLiked.indexOf(idOfUser);
+                      newLike.usersLiked.splice(index, 1);
                   }
                   else { // si on annule un dislike 
-                      const index = newNotes.usersDisliked.indexOf(idOfUser);
-                      newNotes.usersDisliked.splice(index, 1);
+                      const index = newLike.usersDisliked.indexOf(idOfUser);
+                      newLike.usersDisliked.splice(index, 1);
                   }
                   break; 
               // en cas de pouce vers le haut, like = 1
               case 1:
-                  newNotes.usersLiked.push(idOfUser);
+                  newLike.usersLiked.push(idOfUser);
                   break;
 
               default:
                   break;
           }
           //total des likes et dislikes après l'action = nombre d'userId/idOfUser dans chaque tableau
-          newNotes.likes = newNotes.usersLiked.length;
-          newNotes.dislikes = newNotes.usersDisliked.length;
+          newLike.likes = newLike.usersLiked.length;
+          newLike.dislikes = newLike.usersDisliked.length;
 
           //mise à jour de ces valeurs dans la bdd : utilisation de la méthode update
-          Sauce.updateOne({_id: choosenSauce}, newNotes)
+          Sauce.updateOne({_id: choosenSauce}, newLike)
               .then(() => res.status(200).json({ message: 'Sauce notée !' }))
               .catch(error => res.status(400).json({ error }))
           })
