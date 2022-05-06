@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const loginUser = require("../models/user");
 
 /**==========================================================================================
  * *Enregistrement compte utilisateur
@@ -9,13 +9,13 @@ exports.signup = (req, res, next) => {
   bcrypt
   .hash(req.body.password, 10)
   .then((hash) => {
-    const user = new User({
+    const user = new loginUser({
       email: req.body.email,
       password: hash,
     });
     user
     .save()
-    .then(() => req.status(201).json({ message: "Utilisateur créé !" }))
+    .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
     .catch((error) => res.status(400).json({ message: "Adresse email existe deja" }));
   })
   .catch((error) => res.status(500).json ({ error }));
@@ -25,8 +25,9 @@ exports.signup = (req, res, next) => {
  * *Login compte utilisateur
  ============================================================================================*/
 exports.login = (req, res, next) => {
-  User.findOne({ email: req.body.email })
+  loginUser.findOne({ email: req.body.email })
     .then((user) => {
+      console.log(user)
       if (!user) {
         return res.status(401).json({ error: "Utilisateur non trouvé !" });
       }
