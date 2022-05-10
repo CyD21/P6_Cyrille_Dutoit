@@ -1,15 +1,19 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const loginUser = require("../models/user");
+//==============================================================
+// *Controller des routes utilisateur
+//==============================================================
 
-/**==========================================================================================
- * *Enregistrement compte utilisateur
- ============================================================================================*/
+const bcrypt = require("bcrypt");             // Gestion de cryptage de données
+const jwt = require("jsonwebtoken");          // Gestion des TOKEN
+const loginUser = require("../models/user");  // Appel du modèles utilisateur
+
+//=========================================================================================
+// *Enregistrement compte utilisateur /API/AUTH/SIGNUP
+//=========================================================================================
 exports.signup = (req, res, next) => {
   bcrypt
-    .hash(req.body.password, 10)
+    .hash(req.body.password, 10)    // Hash du mot de passe et salage en 10 passe
     .then((hash) => {
-      const user = new loginUser({
+      const user = new loginUser({  
         email: req.body.email,
         password: hash,
       });
@@ -23,9 +27,9 @@ exports.signup = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-/**==========================================================================================
- * *Login compte utilisateur
- ============================================================================================*/
+//=========================================================================================
+// *Login compte utilisateur /API/AUTH/LOGIN
+//=========================================================================================
 exports.login = (req, res, next) => {
   loginUser
     .findOne({ email: req.body.email })
