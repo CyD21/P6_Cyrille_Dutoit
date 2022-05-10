@@ -10,6 +10,7 @@ const path = require("path");
 const app = express();
 dotenv.config();
 
+
 // !====CONNECTION BASE DE DONNEES=================
 mongoose
   .connect(
@@ -19,6 +20,7 @@ mongoose
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 // !===============================================
+
 
 // !====CORS (Cross-Origin Ressoure Sharing)=======
 app.use((req, res, next) => {
@@ -34,6 +36,8 @@ app.use((req, res, next) => {
   next();
 });
 // !=================================================
+
+
 app.use(express.json());
 app.use(helmet.contentSecurityPolicy({useDefaults: false,}));
 app.use("/api/auth", userRoutes);

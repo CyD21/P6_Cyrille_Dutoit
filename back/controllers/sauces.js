@@ -81,10 +81,6 @@ exports.likeSauce = (req, res, next) => {
   const idOfUser = req.body.userId;
   const choosenSauce = req.params.id;
 
-  // console.log(like);
-  // console.log(idOfUser);
-  // console.log(choosenSauce);
-
   // rechercher la choosenSauce puis modifier ses infos
   Sauce.findOne({_id: choosenSauce})
       .then(sauce => {
