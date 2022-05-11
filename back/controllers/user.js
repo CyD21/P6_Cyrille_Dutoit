@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");          // Gestion des TOKEN
 const loginUser = require("../models/user");  // Appel du modèles utilisateur
 
 //=========================================================================================
-// *Enregistrement compte utilisateur /API/AUTH/SIGNUP
+// *Enregistrement compte utilisateur POST /API/AUTH/SIGNUP
 //=========================================================================================
 exports.signup = (req, res, next) => {
   bcrypt
@@ -28,7 +28,7 @@ exports.signup = (req, res, next) => {
 };
 
 //=========================================================================================
-// *Login compte utilisateur /API/AUTH/LOGIN
+// *Login compte utilisateur POST /API/AUTH/LOGIN
 //=========================================================================================
 exports.login = (req, res, next) => {
   loginUser
